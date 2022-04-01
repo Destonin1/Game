@@ -1,0 +1,488 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+.menu-container {
+    background: linear-gradient(to bottom right, rgb(69, 69, 224), rgb(230, 61, 89));
+}
+
+.options {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    padding: 20vh 0;
+}
+
+.option {
+    padding: 10px 20px;
+    border: solid 2px #000;
+    border-radius: 25px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.option:hover {
+    box-shadow: 0 0 30px rgb(28, 31, 224);
+}
+
+.container {
+    background: linear-gradient(rgb(58, 58, 226), rgb(230, 233, 39));
+}
+
+.back {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #000;
+    background-color: #fff;
+    padding: 10px 15px;
+    font-size: 22px;
+    cursor: pointer;
+    border-radius: 40px;
+}
+
+.back:hover {
+    box-shadow: 0 0 10px #fff;
+}
+
+.menu-arrow {
+    margin-right: 10px;
+}
+
+/* WEATHER */
+
+.content {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 30px;
+    color: #fff;
+}
+
+.content-title {
+    text-align: center;
+    font-size: 50px;
+}
+
+.content-info {
+    margin-top: 60px;
+    margin-bottom: -50px;
+    font-size: 28px;
+    width: 300px;
+    float: left;
+}
+
+.Ukraine {
+    margin: 0 auto;
+}
+
+#ukraine-map {
+    width: 100%;
+    height: 880px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.city-wrap {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #000;
+    box-shadow: 0 0 10px #000;
+    border-radius: 10px;
+    width: 590px;
+}
+
+.city-block {
+    display: inline-block;
+    padding: 10px;
+    text-align: center;
+}
+
+.city-block-close {
+    font-size: 30px;
+    padding: 10px;
+    color: red;
+    width: 45px;
+    height: 45px;
+    line-height: 25px;
+    font-weight: 700;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-top-right-radius: 10px;
+    cursor: pointer;
+}
+
+.city-block-close:hover {
+    background-color: red;
+    color: white;
+}
+
+.city-block-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: rgb(51, 44, 155);
+    margin-bottom: 20px;
+}
+
+tr.temp-row td {
+    font-size: 20px;
+    padding-left: 3px;
+}
+
+.grey-bg td {
+    background-color: rgba(168, 165, 165, 0.377);
+    border-spacing: 0ch;
+}
+
+.city-block-tabs-title {
+    padding-bottom: 10px;
+}
+
+.side-title {
+    text-align: right;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    height: 18px;
+    line-height: 18px;
+    margin-bottom: 1px;
+}
+
+.side-title:first-child {
+    margin-bottom: 5px;
+}
+
+.weather-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.sml-text {
+    font-weight: normal;
+}
+
+.city-block-tabs {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.city-block-tabs-item {
+    display: inline-block;
+    width: 86px;
+    padding: 5px 5px;
+    margin: 0;
+    border: 1px solid rgb(51, 44, 155);;
+    border-bottom: none;
+    font-size: 16px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(236, 231, 231);
+    z-index: 5;
+}
+
+.city-block-tabs-item:hover {
+    background-color: #fff;
+}
+
+.city-block-tabs>input[type="radio"]:checked+label {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+    margin-bottom: -1px;
+}
+
+.city-block-table {
+    display: none;
+    width: 430px;
+    border: 1px solid rgb(51, 44, 155);;
+    padding: 20px 14px 10px 14px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-collapse: collapse;
+    z-index: 4;
+}
+
+.city-block-table th, .city-block-table td {
+    font-size: 16px;
+}
+
+#tab-btn-1:checked~#city-block-table1,
+#tab-btn-2:checked~#city-block-table2,
+#tab-btn-3:checked~#city-block-table3,
+#tab-btn-4:checked~#city-block-table4,
+#tab-btn-5:checked~#city-block-table5 {
+    display: block;
+}
+
+#tab-btn-1, #tab-btn-2, #tab-btn-3, #tab-btn-4, #tab-btn-5 {
+    display: none;
+}
+
+.city-block-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.city-block-info-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 190px;
+}
+
+.city-block-info-date {
+    width: 100%;
+}
+
+.common-text {
+    font-weight: normal;
+    font-size: 20px;
+    color: #000;
+}
+
+.city-block-info-date-day {
+    font-size: 24px;
+    color: rgb(51, 44, 155);
+    text-align: center;
+}
+
+.city-block-info-date-full {
+    text-align: center;
+    font-size: 20px;
+    color: rgb(51, 44, 155);
+}
+
+.city {
+    cursor: pointer;
+    z-index: 99;
+}
+
+.city:focus {
+    outline: none;
+}
+
+.city-text {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.Chernivtsi-text, .Ivano-Frankivsk-text, .Ternopil-text, .Khmelnytsk-text, .Rivne-text {
+    font-size: 12px;
+}
+
+/* Game */
+
+.game-container {
+    min-height: 100vh;
+    background: url('img/bcpage2.jpg') no-repeat top / cover;
+}
+
+.mode {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding-top: 100px;
+}
+
+.mode-title {
+    width: 100%;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+.mode-selection {
+    font-size: 30px;
+    cursor: pointer;
+    border: 1px solid #000;
+    padding: 55px 100px;
+    width: 400px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.mode-selection:hover {
+    box-shadow: 0 0 10px #000;
+}
+
+.mode-selection-AI {
+    background: url('img/btn2.png') no-repeat center / cover;
+}
+
+.mode-selection-player {
+    background: url('img/btn1.png') no-repeat center / cover;
+}
+
+
+.board-size {
+    text-align: center;
+    padding-top: 100px;
+}
+
+.board-size-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 100px;
+}
+
+.choose-size-btns-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.choose-size-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.choose-size-btn {
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: #fff;
+    margin-bottom: 30px;
+    width: 130px;
+}
+
+.choose-size-btn:hover {
+    box-shadow: 0 0 10px #000;
+}
+
+.choose-size-img {
+    width: 500px;
+    height: 500px;
+    cursor: pointer;
+}
+
+.score-board {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.turn-text {
+    font-size: 36px;
+}
+
+#turn-text-wrap {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.player {
+    text-align: center;
+    width: 280px;
+}
+
+.player-nickname {
+    font-weight: 700;
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.player-score {
+    font-size: 30px;
+}
+
+.player-score-number {
+    font-weight: 700;
+}
+
+.player-colors {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.player-color {
+    margin: 10px 10px 0 10px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+.player-colors-text {
+    font-size: 24px;
+    width: 280px;
+    margin-top: 10px;
+}
+
+.board {
+    margin-top: -50px;
+    padding-bottom: 100px;
+}
+
+.row-hor, .row-vert {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-hor {
+    height: 10px;
+}
+
+.row-vert {
+    height: 45px;
+}
+
+.line {
+    display: inline-block;
+    background-color: rgba(207, 206, 206);
+    cursor: pointer;
+}
+
+.line:hover {
+    background-color: #000;
+}
+
+.line-game {
+    background-color: #000;
+    cursor: auto;
+}
+
+.line-hor {
+    width: 45px;
+    height: 10px;
+    margin: 0 6px;
+    border-radius: 3px;
+}
+  
+.line-vert {
+    width: 10px;
+    height: 45px;
+    border-radius: 3px;
+}
+
+.square {
+    width: 47px;
+    height: 47px;
+    background-color:#fff;
+}
+
+.board-button {
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 30px;
+    cursor: pointer;
+    background-color: #f5e903;
+    display: block;
+    margin: 20px auto 0 auto;
+}
