@@ -35,23 +35,15 @@ const Game = () => {
 
     const chooseMode = () => {
         let p = new Promise((resolve, reject) => {
-            const modeContainer = document.createElement("div");
-            modeContainer.classList.add("mode");
+            const modeContainer = createElem('div','mode');
             modeContainer.insertAdjacentHTML("beforeend","<h1 class='mode-title'>Choose the mode you want to play</h1>")
-            const btnPlsyer = document.createElement("div");
-            const btnAI = document.createElement("div");
-            btnPlsyer.classList.add("mode-selection");
-            btnPlsyer.classList.add("mode-selection-player");
-            btnAI.classList.add("mode-selection");
-            btnAI.classList.add("mode-selection-AI");
-            btnPlsyer.textContent = "Player vs Player";
-            btnAI.textContent = "Player vs AI";
+            const btnPlsyer = createElem('button','mode-selection-player',"Player vs Player");
+            const btnAI = createElem('button','mode-selection-AI',"Player vs AI");
             btnPlsyer.onclick = resolve;
             btnAI.onclick = reject;
             modeContainer.appendChild(btnPlsyer);
             modeContainer.appendChild(btnAI);
-            const container = document.getElementsByClassName('game-container');
-            container[0].appendChild(modeContainer);
+            append(modeContainer);
         })
         p.then(() => {
             setMode(false);
@@ -63,38 +55,29 @@ const Game = () => {
     }
     
     const chooseBoardSize = () => {
-        const container = document.getElementsByClassName('game-container');
-        container[0].innerHTML = ' ';
         const chooseBlock = createBoardSizeContent()
-        container[0].appendChild(chooseBlock);
+        append(chooseBlock);
     }
     
     const createBoardSizeContent = () => {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('board-size');
+        const wrapper = createElem("div","board-size");
     
-        const title = document.createElement('h1');
-        title.classList.add('board-size-title');
-        title.textContent = "Choose board size";
+        const title = createElem("h1","board-size-title","Choose board size");
         wrapper.appendChild(title);
     
-        const btnswrapper = document.createElement('div');
-        btnswrapper.classList.add('choose-size-btns-wrapper');
+        const btnswrapper = createElem("div","choose-size-btns-wrapper");
     
-        const btnBlock1 = document.createElement('div');
-        btnBlock1.classList.add('choose-size-block');
+        const btnBlock1 = createElem("div","choose-size-block");
         const btnImage1 = createBtnImage(board7,'board7x7',7);
         btnBlock1.appendChild(btnImage1);
         btnswrapper.appendChild(btnBlock1);
     
-        const btnBlock2 = document.createElement('div');
-        btnBlock2.classList.add('choose-size-block');
+        const btnBlock2 = createElem("div","choose-size-block");
         const btnImage2 = createBtnImage(board9,'board9x9',9);
         btnBlock2.appendChild(btnImage2);
         btnswrapper.appendChild(btnBlock2);
     
-        const btnBlock3 = document.createElement('div');
-        btnBlock3.classList.add('choose-size-block');
+        const btnBlock3 = createElem("div","choose-size-block");
         const btnImage3 = createBtnImage(board11,'board11x11',11);
         btnBlock3.appendChild(btnImage3);
         btnswrapper.appendChild(btnBlock3);
@@ -104,8 +87,7 @@ const Game = () => {
     }
     
     const createBtnImage = (source,alt,i) => {
-        const btnImage = document.createElement('img');
-        btnImage.classList.add('choose-size-img');
+        const btnImage = createElem('img','choose-size-img')
         btnImage.src = source;
         btnImage.alt = alt;
         btnImage.addEventListener('click', ()=>{
@@ -116,8 +98,7 @@ const Game = () => {
     }
     
     const start = () => {
-        const container = document.getElementsByClassName('game-container');
-        container[0].innerHTML = ' ';
+        append(" ");
         firstPlayerTurn = true;
         board = Board();
         if(modeAI){
@@ -128,7 +109,6 @@ const Game = () => {
     }
 
     const restart = () => {
-        const container = document.getElementsByClassName('game-container');
         board.destroyBoard();
         firstPlayerTurn = true;
         board = Board();
@@ -153,8 +133,7 @@ const Game = () => {
                 isAI = true;
                 break
         }
-        const scoreBoard = document.createElement('div');
-        scoreBoard.classList.add("score-board");
+        const scoreBoard = createElem('div','score-board')
         scoreBoard.insertAdjacentHTML('beforeend',`<div class="player">
             <h2 class="player-nickname">${player1Name}</h2>
             <div class="player-score">Squares = <span class="player-score-number" data-player-score="0">0</span></div>
@@ -166,9 +145,7 @@ const Game = () => {
             <div class="player-score">Squares = <span class="player-score-number" data-player-score="1">0</span></div>
             <div class="player-colors"><p class="player-colors-text">Choose color:</p></div>
         </div>`)
-        const container = document.getElementsByClassName('game-container');
-        container[0].innerHTML = ' ';
-        container[0].appendChild(scoreBoard);
+        append(scoreBoard)
         const colorsChoice = document.getElementsByClassName("player-colors");
         if(isAI){
             createColors(colors,colorsChoice[0],0);
@@ -181,8 +158,7 @@ const Game = () => {
     }
 
     const createColorBlock = (count,color) => {
-        const playerColor = document.createElement('div');
-        playerColor.classList.add("player-color");
+        const playerColor = createElem('div','player-color')
         playerColor.setAttribute('data-color-numder', count);
         playerColor.style.backgroundColor = color;
         return playerColor
@@ -227,19 +203,17 @@ const Game = () => {
         const turnText = document.getElementById("turn-text-wrap");
         turnText.textContent = "";
         
-        const text = document.createElement('div');
-        text.classList.add('winner-text');
+        const text = createElem('div','winner-text')
 
         const name = document.createElement('span');
-        name.textContent = isFirstPlayerWon ? players[0].getName():players[1].getName();
+        let winnerText = isFirstPlayerWon ? players[0].getName():players[1].getName();
+        winnerText = winnerText + ' is won';
+        name.textContent = winnerText;
         name.style.color = isFirstPlayerWon ? players[0].getColor():players[1].getColor();
         text.appendChild(name);
-        text.insertAdjacentHTML('beforeend',' is won');
         turnText.appendChild(text);
 
-        const createBoardButton = document.createElement("button");
-        createBoardButton.classList.add("board-button");
-        createBoardButton.textContent = "Restart";
+        const createBoardButton = createElem('button','board-button','Restart')
         createBoardButton.onclick = restart;
         turnText.appendChild(createBoardButton);
     }
@@ -250,12 +224,10 @@ const Game = () => {
 const Board = () => {
     let squares = {};
     let remainingSquares;
-    let activeSquaresNumber;
     const boardSize = game.getBoardSize();
     const setRemainingSquares = (arr) => remainingSquares = arr;
     const getRemainingSquares = () => remainingSquares;
     const createBoard = () => {
-        activeSquaresNumber = getActiveSquaresNumber(boardSize);
         let upSize = Math.ceil(boardSize/2);
         let numb = 1,c=0;
         const board = document.createElement('div');
@@ -278,6 +250,7 @@ const Board = () => {
         board.querySelector(`[data-numbs='${boardSize-upSize}0']`).style.background= "#b5b0b0";
         board.querySelector(`[data-numbs='${(boardSize-upSize).toString() + boardSize-1}']`).style.background= "#b5b0b0";
         board.querySelector(`[data-numbs='${boardSize-1}0']`).style.background= "#b5b0b0";
+
         const container = document.getElementsByClassName('game-container');
         container[0].appendChild(board);
         setRemainingSquares(Object.keys(squares));
@@ -289,7 +262,7 @@ const Board = () => {
         row1.classList.add("row-hor");
         for(let h = 0; h < numb; h++) {
             if(h === 0 || h === numb-1 || numb < 4) {
-                row1.appendChild(createBoardLine("line-hor", (i+c).toString() + h));
+                row1.appendChild(createBorderLine("line-hor", (i+c).toString() + h));
             }
             else {
                 row1.appendChild(createLine("line-hor", (i+c).toString() + h, (i-1+Math.abs(c)).toString() + h-1));
@@ -299,20 +272,19 @@ const Board = () => {
     }
 
     const createRowVert = (numb,i) => {
-        const row2 = document.createElement('div');
-        row2.classList.add("row-vert")
+        const row2 = createElem('div','row-vert')
         for(let v = 0; v < numb; v++) {
             if(v === 0 || v === numb-1) {
                 if(v !== numb-1){
-                    row2.appendChild(createBoardLine("line-vert", (i).toString() + v));
+                    row2.appendChild(createBorderLine("line-vert", (i).toString() + v));
                     row2.appendChild(createSquare(i.toString() + v));
                 }
-                else row2.appendChild(createBoardLine("line-vert", (i).toString() + v-1));
+                else row2.appendChild(createBorderLine("line-vert", (i).toString() + v-1));
             }
             else if(numb === boardSize +1)
             {
                 if(v === 1 || v === numb-2){
-                    row2.appendChild(createBoardLine("line-vert", (i).toString() + v));
+                    row2.appendChild(createBorderLine("line-vert", (i).toString() + v));
                     row2.appendChild(createSquare(i.toString() + v));
                 }
                 else {
@@ -328,9 +300,8 @@ const Board = () => {
         return row2
     }
 
-    const createBoardLine = (nameClass,index) => {
-        let line = document.createElement('div');
-        line.classList.add("line");
+    const createBorderLine = (nameClass,index) => {
+        let line = createElem('div','line');
         line.classList.add("line-game");
         line.classList.add(nameClass);
         line.setAttribute('data-numb1', index);
@@ -338,8 +309,7 @@ const Board = () => {
     }
     
     const createLine = (nameClass,index1,index2) => {
-        let line = document.createElement('div');
-        line.classList.add("line");
+        let line = createElem('div','line');
         line.classList.add(nameClass);
         line.setAttribute('data-numb1', index1);
         line.setAttribute('data-numb2', index2);
@@ -363,28 +333,14 @@ const Board = () => {
     }
     
     const createSquare = (index) => {
-        const square = document.createElement('div');
-        square.classList.add("square");
+        const square = createElem('div','square')
         square.setAttribute('data-numbS', index);
         return square
     }
 
-    const getActiveSquaresNumber = (size) => {
-        let result = 0;
-        for(let i = 3; i < size; i += 2) {
-            if(i == size-2){
-                result += i + i + i;
-            }
-            else result += i + i;
-            
-        }
-        return result
-    }
-
     const createTurnText = () => {
         const turnTextWrap = document.getElementById("turn-text-wrap");
-        const turnText = document.createElement("h3");
-        turnText.classList.add("turn-text");
+        const turnText = createElem('h3','turn-text')
         const turnNickname = document.createElement("span");
         turnNickname.setAttribute("id", "turn-nickname");
         turnNickname.textContent = "Player";
@@ -407,7 +363,7 @@ const Board = () => {
             document.getElementById("turn-nickname").style.color = `${game.firstPlayerTurn ? players[0].getColor():players[1].getColor()}`;
         }
         else {
-            if(players[0].getScore() + players[1].getScore() >= activeSquaresNumber){
+            if(remainingSquares.length === 0){
                 if(players[0].getScore() > players[1].getScore()){
                     game.endGame(true);
                 }
@@ -438,7 +394,7 @@ const Board = () => {
                     break
                 }
             }
-            board.setRemainingSquares(sqaureNumbers)
+            setRemainingSquares(sqaureNumbers)
             return true
         }
     }
@@ -448,7 +404,7 @@ const Board = () => {
         board[0].remove();
     }
 
-    return {getRemainingSquares,setRemainingSquares,createBoard,squares,checkSquare,lineHandle,destroyBoard}
+    return {getRemainingSquares,createBoard,squares,checkSquare,lineHandle,destroyBoard}
 }
 
 const Player = (playerName) => {
@@ -629,7 +585,26 @@ function sliceLine(fullLine) {
     return [fullLine.slice(0,2),fullLine.slice(2,4)]
 }
 
+function append(elem){
+    const container = document.getElementsByClassName('game-container');
+    container[0].innerHTML = ' ';
+    if(typeof elem === 'object'){
+        container[0].appendChild(elem);
+    }
+}
+
+function createElem(tag,className,textContent){
+    const elem = document.createElement(tag);
+    if(className){
+        elem.classList.add(className);
+    }
+    if(textContent){
+        elem.textContent = textContent;
+    }
+    return elem
+}
+
 function getRandomNumb(min, max) {
     const number = Math.floor(Math.random() * (max - min)) + min;
     return number
-  }
+}

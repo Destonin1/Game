@@ -301,17 +301,17 @@ tr.temp-row td {
     margin-bottom: 100px;
 }
 
-.mode-selection {
+.mode-selection-AI,.mode-selection-player {
     font-size: 30px;
     cursor: pointer;
     border: 1px solid #000;
     padding: 55px 100px;
-    width: 400px;
+    width: 420px;
     border-radius: 20px;
     text-align: center;
 }
 
-.mode-selection:hover {
+.mode-selection-AI:hover,.mode-selection-player:hover {
     box-shadow: 0 0 10px #000;
 }
 
