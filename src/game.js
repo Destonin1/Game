@@ -27,7 +27,7 @@ const Game = () => {
     
     let modeAI;
     const setMode = (mode) => modeAI = mode;
-    const getMode = () => modeAI;
+    const getIsAIMode = () => modeAI;
 
     let boardSize;
     const setBoardSize = (size) => boardSize = size;
@@ -99,18 +99,17 @@ const Game = () => {
     
     const start = () => {
         append(" ");
-        firstPlayerTurn = true;
         board = Board();
         if(modeAI){
-            players = [Player("Player"),AIPlayer()];
+            players = [Player("Player",0),AIPlayer()];
         }
-        else players = [Player("Player 1"),Player("Player 2")];
+        else players = [Player("Player 1",0),Player("Player 2",1)];
         createScoreBoard(modeAI ? "player vs AI":"player vs player");
     }
 
     const restart = () => {
         board.destroyBoard();
-        firstPlayerTurn = true;
+        game.firstPlayerTurn = true;
         board = Board();
         players[0].resetScore();
         players[1].resetScore();
@@ -218,7 +217,7 @@ const Game = () => {
         turnText.appendChild(createBoardButton);
     }
 
-    return {chooseMode,setMode,getMode,setBoardSize,getBoardSize,createScoreBoard,firstPlayerTurn,endGame}
+    return {chooseMode,setMode,getIsAIMode,setBoardSize,getBoardSize,createScoreBoard,firstPlayerTurn,endGame}
 }
 
 const Board = () => {
@@ -238,7 +237,7 @@ const Board = () => {
             numb=numb+2;
         }
     
-        c=-1;
+        c=-1;  // coefficient for making the board
         for(let i = 0; i < boardSize-upSize; i++){
             numb=numb-2;
             board.appendChild(createRowHor(numb,i+upSize,c));
@@ -254,7 +253,11 @@ const Board = () => {
         const container = document.getElementsByClassName('game-container');
         container[0].appendChild(board);
         setRemainingSquares(Object.keys(squares));
-        createTurnText();
+
+        const turnTextWrap = document.getElementById("turn-text-wrap");
+        turnTextWrap.textContent = " ";
+        const turnText = createTurnText();
+        turnTextWrap.appendChild(turnText);
     }
 
     const createRowHor = (numb,i,c) => {
@@ -339,7 +342,6 @@ const Board = () => {
     }
 
     const createTurnText = () => {
-        const turnTextWrap = document.getElementById("turn-text-wrap");
         const turnText = createElem('h3','turn-text')
         const turnNickname = document.createElement("span");
         turnNickname.setAttribute("id", "turn-nickname");
@@ -347,17 +349,16 @@ const Board = () => {
         turnNickname.style.color = `${players[0].getColor()}`
         turnText.appendChild(turnNickname);
         turnText.insertAdjacentHTML("beforeend"," turn");
-        turnTextWrap.textContent = " ";
-        turnTextWrap.appendChild(turnText);
+        return turnText
     }
 
-    const lineHandle = (index1,index2,index3) => {
+    const lineHandle = (index1,index2,index3) => { 
         squares[index1][index3] = true;
         squares[index2][index3] = true;
         const indexKeys1 = Object.keys(squares[index1]);
         const indexKeys2 = Object.keys(squares[index2]);
-        const checkSquare1 = checkSquare(index1,indexKeys1);
-        const checkSquare2 = checkSquare(index2,indexKeys2);
+        const checkSquare1 = isSquareClosed(index1,indexKeys1);
+        const checkSquare2 = isSquareClosed(index2,indexKeys2);
         if(!checkSquare1 && !checkSquare2) {
             game.firstPlayerTurn = !game.firstPlayerTurn;
             document.getElementById("turn-nickname").style.color = `${game.firstPlayerTurn ? players[0].getColor():players[1].getColor()}`;
@@ -372,7 +373,7 @@ const Board = () => {
         }
     }
 
-    const checkSquare = (index, indexKeys) => {
+    const isSquareClosed = (index, indexKeys) => {
         let isSquareClosed = true;
         for(let i = 0; i < indexKeys.length; i++) {
             if(!board.squares[index][indexKeys[i]]){
@@ -381,22 +382,32 @@ const Board = () => {
             }
         }
         if(isSquareClosed){
-            const squareElement = document.querySelector(`[data-numbS="${index}"]`);
-            const i = game.firstPlayerTurn ? 0:1;
-            squareElement.style.background = `${players[i].getColor()}`;
-            players[i].scoreCount();
-            const playerScore = document.querySelector(`[data-player-score="${i}"]`);
-            playerScore.textContent = `${players[i].getScore()}`;
-            let sqaureNumbers = getRemainingSquares();
-            for(let i = 0; i < sqaureNumbers.length; i++){ 
-                if (sqaureNumbers[i] == index) { 
-                    sqaureNumbers.splice(i, 1);
-                    break
-                }
-            }
-            setRemainingSquares(sqaureNumbers)
+            closedSquare(index);
             return true
         }
+    }
+
+    const closedSquare = (index) => {
+        const squareElement = document.querySelector(`[data-numbS="${index}"]`);
+        const i = game.firstPlayerTurn ? 0:1;
+        squareElement.style.background = `${players[i].getColor()}`; //change the color of the closed square
+
+        players[i].scoreCount();
+        const playerScore = document.querySelector(`[data-player-score="${i}"]`);
+        playerScore.textContent = `${players[i].getScore()}`; //update score display
+
+        deleteSquareFromRemaining(index);
+    }
+
+    const deleteSquareFromRemaining = (index) => {  //deleting present square from non closed
+        let sqaureNumbers = getRemainingSquares();
+        for(let i = 0; i < sqaureNumbers.length; i++){ 
+            if (sqaureNumbers[i] == index) { 
+                sqaureNumbers.splice(i, 1);
+                break
+            }
+        }
+        setRemainingSquares(sqaureNumbers);
     }
 
     const destroyBoard = () => {
@@ -404,10 +415,10 @@ const Board = () => {
         board[0].remove();
     }
 
-    return {getRemainingSquares,createBoard,squares,checkSquare,lineHandle,destroyBoard}
+    return {getRemainingSquares,createBoard,squares,isSquareClosed,lineHandle,destroyBoard}
 }
 
-const Player = (playerName) => {
+const Player = (playerName,i) => {
     let name = playerName
     let score = 0;
     let color;
@@ -417,7 +428,7 @@ const Player = (playerName) => {
     const getScore = () => score;
     const resetScore = () => {
         score = 0;
-        document.querySelector(`[data-player-score="${0}"]`).textContent = score;
+        document.querySelector(`[data-player-score="${i}"]`).textContent = score;
     }
     const scoreCount = () => {
         score++;
@@ -444,24 +455,23 @@ const AIPlayer = () => {
         let randomSquare = getRandomNumb(0,squaresCopyKeys.length);
         const squareKeys = Object.keys(squaresObj[squaresCopyKeys[randomSquare]]);
         for(let j = 0; j < squareKeys.length; j++){
-            if(!squaresObj[squaresCopyKeys[randomSquare]][squareKeys[j]]){
+            if(!squaresObj[squaresCopyKeys[randomSquare]][squareKeys[j]]){ // if that random line not activated, return it
                 return squareKeys[j]
             }
         }
     }
 
-    const getRandomLine = (squaresObj,t) => {
-        let randomLine;
+    const getRandomLine = (squaresObj,count) => {
         let squaresObj1 = JSON.parse(JSON.stringify(squaresObj));
-        randomLine = getRandomFreeLine(squaresObj1);
+        let randomLine = getRandomFreeLine(squaresObj1);
         const twoSquares = sliceLine(randomLine);
         squaresObj1[twoSquares[0]][randomLine] = true;
         squaresObj1[twoSquares[1]][randomLine] = true;
-        let l = closureMove(squaresObj1);
-        if(l == null){
+        let checkBadMove = closureMove(squaresObj1);
+        if(checkBadMove == null){
             return randomLine
         }
-        else if(t >= 9){
+        else if(count >= 9){
             return findLessClosureToPlayer(squaresObj)
         }
         else return false
@@ -527,7 +537,7 @@ const AIPlayer = () => {
         return chosenLine
     }
     
-    const move = () => {
+    const findBestNove = () => {
         let bestMove;
         let squaresCopy = JSON.parse(JSON.stringify(board.squares));
         bestMove = closureMove(squaresCopy);
@@ -545,7 +555,7 @@ const AIPlayer = () => {
     }
     
     const AIMove = () => {
-        const index3AI = move();
+        const index3AI = findBestNove();
         const twoSquares = sliceLine(index3AI);
         const chosenLine = document.querySelectorAll(`[data-numb1="${twoSquares[0]}"]`);
         for(let i = 0;i < chosenLine.length;i++){
@@ -567,15 +577,17 @@ const AIPlayer = () => {
     return {getName,getColor,getScore,resetScore,scoreCount,AITurn}
 }
 
-function lineClick(e){
-    if(!(game.getMode() && !game.firstPlayerTurn)){
+function lineClick(e){ // Player click on empty line
+    if(!(game.getIsAIMode() && !game.firstPlayerTurn)){ 
         e.currentTarget.classList.add("line-game");
         const index1 = e.currentTarget.getAttribute("data-numb1");
         const index2 = e.currentTarget.getAttribute("data-numb2");
         const index3 = (index1).toString() + index2;
         board.lineHandle(index1,index2,index3);
+
         e.currentTarget.removeEventListener("click", lineClick);
-        if(game.getMode() && !game.firstPlayerTurn){
+
+        if(game.getIsAIMode() && !game.firstPlayerTurn){ //if its Player vs AI and Player turn over, start AI turn
             setTimeout(players[1].AITurn,500);
         }
     }
@@ -585,7 +597,7 @@ function sliceLine(fullLine) {
     return [fullLine.slice(0,2),fullLine.slice(2,4)]
 }
 
-function append(elem){
+function append(elem){ //add element to DOM 
     const container = document.getElementsByClassName('game-container');
     container[0].innerHTML = ' ';
     if(typeof elem === 'object'){
@@ -593,7 +605,7 @@ function append(elem){
     }
 }
 
-function createElem(tag,className,textContent){
+function createElem(tag,className,textContent){ //short way to create an element
     const elem = document.createElement(tag);
     if(className){
         elem.classList.add(className);
