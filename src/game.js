@@ -14,9 +14,20 @@ export default function initGame (backBlock) {
     })
     root.innerHTML= " ";
     root.appendChild(backBlock)
-    const container = document.createElement('div');
-    container.classList.add('game-container');
+
+    const titleWrap = createElem('div','title-wrap');
+    const title = createElem('h1','game-title');
+    titleWrap.appendChild(title);
+    root.appendChild(titleWrap);
+
+    const container = createElem('div','game-container');
     root.appendChild(container);
+
+    const background = createElem('div','game-background');
+    const redLine = createElem('div','game-background-line');
+    background.appendChild(redLine);
+    root.appendChild(background);
+
     game = Game();
     game.chooseMode();
 }
@@ -34,13 +45,18 @@ const Game = () => {
     const getBoardSize = () => boardSize;
 
     const chooseMode = () => {
+        const title = document.querySelector('.game-title');
+        title.textContent = 'Choose the mode you want to play';
+
         let p = new Promise((resolve, reject) => {
             const modeContainer = createElem('div','mode');
-            modeContainer.insertAdjacentHTML("beforeend","<h1 class='mode-title'>Choose the mode you want to play</h1>")
+
             const btnPlsyer = createElem('button','mode-selection-player',"Player vs Player");
-            const btnAI = createElem('button','mode-selection-AI',"Player vs AI");
             btnPlsyer.onclick = resolve;
+
+            const btnAI = createElem('button','mode-selection-AI',"Player vs AI");
             btnAI.onclick = reject;
+
             modeContainer.appendChild(btnPlsyer);
             modeContainer.appendChild(btnAI);
             append(modeContainer);
@@ -60,11 +76,10 @@ const Game = () => {
     }
     
     const createBoardSizeContent = () => {
+        const title = document.querySelector('.game-title');
+        title.textContent = 'Choose board size';
+
         const wrapper = createElem("div","board-size");
-    
-        const title = createElem("h1","board-size-title","Choose board size");
-        wrapper.appendChild(title);
-    
         const btnswrapper = createElem("div","choose-size-btns-wrapper");
     
         const btnBlock1 = createElem("div","choose-size-block");
@@ -132,19 +147,23 @@ const Game = () => {
                 isAI = true;
                 break
         }
-        const scoreBoard = createElem('div','score-board')
-        scoreBoard.insertAdjacentHTML('beforeend',`<div class="player">
+        
+        const title = document.querySelector('.game-title');
+        title.textContent = 'Every player must choose color before the game starts';
+        title.insertAdjacentHTML('beforebegin',`
+        <div class="player">
             <h2 class="player-nickname">${player1Name}</h2>
             <div class="player-score">Squares = <span class="player-score-number" data-player-score="0">0</span></div>
             <div class="player-colors"><p class="player-colors-text">Choose color:</p></div>
-        </div>
-        <div id="turn-text-wrap">Every player must choose color<br>before the game starts</div>
+        </div>`)
+
+        title.insertAdjacentHTML('afterend',`
         <div class="player">
             <h2 class="player-nickname">${player2Name}</h2>
             <div class="player-score">Squares = <span class="player-score-number" data-player-score="1">0</span></div>
             <div class="player-colors"><p class="player-colors-text">Choose color:</p></div>
         </div>`)
-        append(scoreBoard)
+
         const colorsChoice = document.getElementsByClassName("player-colors");
         if(isAI){
             createColors(colors,colorsChoice[0],0);
@@ -199,8 +218,8 @@ const Game = () => {
     }
 
     const endGame = (isFirstPlayerWon) => {
-        const turnText = document.getElementById("turn-text-wrap");
-        turnText.textContent = "";
+        const title = document.querySelector('.game-title');
+        title.textContent = '';
         
         const text = createElem('div','winner-text')
 
@@ -210,11 +229,11 @@ const Game = () => {
         name.textContent = winnerText;
         name.style.color = isFirstPlayerWon ? players[0].getColor():players[1].getColor();
         text.appendChild(name);
-        turnText.appendChild(text);
+        title.appendChild(text);
 
-        const createBoardButton = createElem('button','board-button','Restart')
+        const createBoardButton = createElem('button','board-button','Restart');
         createBoardButton.onclick = restart;
-        turnText.appendChild(createBoardButton);
+        title.appendChild(createBoardButton);
     }
 
     return {chooseMode,setMode,getIsAIMode,setBoardSize,getBoardSize,createScoreBoard,firstPlayerTurn,endGame}
@@ -223,6 +242,7 @@ const Game = () => {
 const Board = () => {
     let squares = {};
     let remainingSquares;
+    let lastLine;
     const boardSize = game.getBoardSize();
     const setRemainingSquares = (arr) => remainingSquares = arr;
     const getRemainingSquares = () => remainingSquares;
@@ -254,10 +274,10 @@ const Board = () => {
         container[0].appendChild(board);
         setRemainingSquares(Object.keys(squares));
 
-        const turnTextWrap = document.getElementById("turn-text-wrap");
-        turnTextWrap.textContent = " ";
+        const title = document.querySelector('.game-title');
+        title.textContent = '';
         const turnText = createTurnText();
-        turnTextWrap.appendChild(turnText);
+        title.appendChild(turnText);
     }
 
     const createRowHor = (numb,i,c) => {
@@ -342,7 +362,7 @@ const Board = () => {
     }
 
     const createTurnText = () => {
-        const turnText = createElem('h3','turn-text')
+        const turnText = createElem('h1','turn-text')
         const turnNickname = document.createElement("span");
         turnNickname.setAttribute("id", "turn-nickname");
         turnNickname.textContent = "Player";
@@ -352,14 +372,35 @@ const Board = () => {
         return turnText
     }
 
-    const lineHandle = (index1,index2,index3) => { 
+    const lineChangeColor = (line,i,change) => {
+        if(lastLine !== undefined){
+            lastLine.style.backgroundColor = '#000';
+        }
+        line.classList.add('line-game');
+        if(change){
+            line.style.backgroundColor = players[i].getColor();
+        }
+        lastLine = line;
+    }
+
+    const lineHandle = (index1,index2,index3,line,i) => {
+        let isSquareClosed = false;
         squares[index1][index3] = true;
         squares[index2][index3] = true;
         const indexKeys1 = Object.keys(squares[index1]);
         const indexKeys2 = Object.keys(squares[index2]);
-        const checkSquare1 = isSquareClosed(index1,indexKeys1);
-        const checkSquare2 = isSquareClosed(index2,indexKeys2);
-        if(!checkSquare1 && !checkSquare2) {
+        if(checkIsSquareClosed(index1,indexKeys1)){
+            isSquareClosed = true;
+            lineChangeColor(line,i,false);
+            closedSquare(index1);
+        }
+        if(checkIsSquareClosed(index2,indexKeys2)){
+            isSquareClosed = true;
+            lineChangeColor(line,i,false);
+            closedSquare(index2);
+        }
+        if(!isSquareClosed) {
+            lineChangeColor(line,i,true);
             game.firstPlayerTurn = !game.firstPlayerTurn;
             document.getElementById("turn-nickname").style.color = `${game.firstPlayerTurn ? players[0].getColor():players[1].getColor()}`;
         }
@@ -373,18 +414,14 @@ const Board = () => {
         }
     }
 
-    const isSquareClosed = (index, indexKeys) => {
-        let isSquareClosed = true;
+    const checkIsSquareClosed = (index, indexKeys) => {
         for(let i = 0; i < indexKeys.length; i++) {
             if(!board.squares[index][indexKeys[i]]){
-                isSquareClosed = false;
                 return false
             }
         }
-        if(isSquareClosed){
-            closedSquare(index);
-            return true
-        }
+
+        return true
     }
 
     const closedSquare = (index) => {
@@ -415,7 +452,7 @@ const Board = () => {
         board[0].remove();
     }
 
-    return {getRemainingSquares,createBoard,squares,isSquareClosed,lineHandle,destroyBoard}
+    return {getRemainingSquares,createBoard,squares,lineHandle,destroyBoard}
 }
 
 const Player = (playerName,i) => {
@@ -558,13 +595,15 @@ const AIPlayer = () => {
         const index3AI = findBestNove();
         const twoSquares = sliceLine(index3AI);
         const chosenLine = document.querySelectorAll(`[data-numb1="${twoSquares[0]}"]`);
+        let line;
         for(let i = 0;i < chosenLine.length;i++){
             if(chosenLine[i].dataset.numb1 == twoSquares[0] && chosenLine[i].dataset.numb2 == twoSquares[1]){
-                chosenLine[i].classList.add("line-game");
+                line = chosenLine[i];
                 break 
             }
         }
-        board.lineHandle(twoSquares[0],twoSquares[1],index3AI);
+
+        board.lineHandle(twoSquares[0],twoSquares[1],index3AI,line,1);
     };
 
     const AITurn = () => {
@@ -579,11 +618,10 @@ const AIPlayer = () => {
 
 function lineClick(e){ // Player click on empty line
     if(!(game.getIsAIMode() && !game.firstPlayerTurn)){ 
-        e.currentTarget.classList.add("line-game");
         const index1 = e.currentTarget.getAttribute("data-numb1");
         const index2 = e.currentTarget.getAttribute("data-numb2");
         const index3 = (index1).toString() + index2;
-        board.lineHandle(index1,index2,index3);
+        board.lineHandle(index1,index2,index3,e.currentTarget,0);
 
         e.currentTarget.removeEventListener("click", lineClick);
 

@@ -282,23 +282,50 @@ tr.temp-row td {
 
 /* Game */
 
-.game-container {
-    min-height: 100vh;
-    background: url('img/bcpage2.jpg') no-repeat top / cover;
+.game-background{
+    background-image: linear-gradient(to bottom, transparent 90%, blue 90%),
+                      linear-gradient(to right, #fff 90%, blue 90%);
+    background-size: 50px 50px, 50px 50px;
+    width: 100%;
+    height: 100vh;
+    opacity: 10%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -99;
+}
+
+.game-background-line{
+    width: 5px;
+    height: 100%;
+    background-color: red;
+    position: absolute;
+    top: 0;
+    left: 195px;
+    z-index: -98;
+}
+
+.title-wrap {
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+    margin: 100px 0;
+}
+
+.game-title {
+    font-size: 36px;
+    text-align: center;
+    width: 600px;
+    border-radius: 20px;
+    padding: 15px 30px;
+    box-shadow: 1px 1px 10px #000;
+    background-color: #fff;
 }
 
 .mode {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    padding-top: 100px;
-}
-
-.mode-title {
-    width: 100%;
-    font-size: 36px;
-    text-align: center;
-    margin-bottom: 100px;
 }
 
 .mode-selection-AI,.mode-selection-player {
@@ -323,10 +350,8 @@ tr.temp-row td {
     background: url('img/btn1.png') no-repeat center / cover;
 }
 
-
 .board-size {
     text-align: center;
-    padding-top: 100px;
 }
 
 .board-size-title {
@@ -367,13 +392,6 @@ tr.temp-row td {
     cursor: pointer;
 }
 
-.score-board {
-    padding-top: 50px;
-    padding-bottom: 50px;
-    display: flex;
-    justify-content: space-around;
-}
-
 .turn-text {
     font-size: 36px;
 }
@@ -387,6 +405,10 @@ tr.temp-row td {
 .player {
     text-align: center;
     width: 280px;
+    background-color: #fff;
+    box-shadow: 1px 1px 10px #000;
+    border-radius: 10px;
+    padding: 15px 0;
 }
 
 .player-nickname {
@@ -482,7 +504,8 @@ tr.temp-row td {
     padding: 10px 20px;
     font-size: 30px;
     cursor: pointer;
-    background-color: #f5e903;
+    background: linear-gradient(rgb(1, 255, 1), rgb(30, 168, 84));
     display: block;
     margin: 20px auto 0 auto;
+    border: none;
 }

@@ -47,13 +47,12 @@ export default function init(backBlock){
 
 function getWetherInfo(cityid, x, y,cityName){
     if(weatherData[cityid] === undefined && cityid !== undefined){
-        fetch(`https://api.openweathermap.org/data/2.5/forecast?id=${cityid}&appid=5afb9f9d8ccd8dc8ba85590210708a82`, {mode:"cors"})
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?id=${cityid}&appid=5afb9f9d8ccd8dc8ba85590210708a82`)
         .then((response) => {
             return response.json();
         })
         .then((data) => {
             weatherData[cityid] = data;
-            console.log(data);
             createWeatherBlock(weatherData[cityid], x, y, cityName);
         })
         .catch(error => {
