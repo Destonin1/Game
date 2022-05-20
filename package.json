@@ -6,6 +6,7 @@
   "dependencies": {
     "css-loader": "^6.5.1",
     "html-webpack-plugin": "^5.5.0",
+    "jshint": "^2.13.4",
     "lodash": "^4.17.21",
     "style-loader": "^3.3.1",
     "webpack": "^5.67.0"
