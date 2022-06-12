@@ -281,12 +281,14 @@
 }
 
 .board-button {
-    border-radius: 25px;
+    border-radius: 20px;
     padding: 10px 20px;
     font-size: 30px;
     cursor: pointer;
-    background: linear-gradient(rgb(1, 255, 1), rgb(30, 168, 84));
+    color: #fff;
+    background:  #4CAF50;
     display: block;
     margin: 20px auto 0 auto;
     border: none;
+    font-weight: normal;
 }
