@@ -63,7 +63,7 @@
 .game-background{
     background-image: linear-gradient(to bottom, transparent 90%, blue 90%),
                       linear-gradient(to right, #fff 90%, blue 90%);
-    background-size: 57px 57px, 57px 57px;
+    background-size: 40px 40px, 40px 40px;
     width: 100%;
     height: 100%;
     opacity: 10%;
@@ -79,7 +79,7 @@
     background-color: red;
     position: absolute;
     top: 0;
-    left: 222px; 
+    left: 196px; 
     z-index: -98;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .game-container {
-    margin-top: 50px;
+    margin-top: 100px;
 }
 
 .board {
@@ -115,25 +115,18 @@
 }
 
 .mode-selection-AI,.mode-selection-player {
+    background-color: #fff;
     font-size: 30px;
     cursor: pointer;
     border: 1px solid #000;
-    padding: 55px 100px;
-    width: 420px;
+    padding: 35px 0;
+    width: 320px;
     border-radius: 20px;
     text-align: center;
 }
 
 .mode-selection-AI:hover,.mode-selection-player:hover {
     box-shadow: 0 0 10px #000;
-}
-
-.mode-selection-AI {
-    background: url('img/btn2.png') no-repeat center / cover;
-}
-
-.mode-selection-player {
-    background: url('img/btn1.png') no-repeat center / cover;
 }
 
 .board-size {
